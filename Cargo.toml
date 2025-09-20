@@ -1,0 +1,13 @@
+[package]
+name = "akizuki_invoice_parser"
+version = "0.1.0"
+edition = "2024"
+exclude = ["assets/*.html"]
+
+[lib]
+name = "akizuki_invoice_parser"
+path = "src/lib.rs"
+
+[dependencies]
+chrono = "0.4.42"
+scraper = "0.24.0"
