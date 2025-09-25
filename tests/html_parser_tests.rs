@@ -35,5 +35,5 @@ fn test_items() {
 
     let actual = html_parser::parse_items(&html_content);
 
-    assert_eq!(actual.len(), 0);
+    assert_eq!(actual.len(), 8);
 }

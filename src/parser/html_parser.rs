@@ -1,6 +1,4 @@
-use std::fmt::Debug;
-
-use scraper::{ElementRef, Html, Selector};
+use scraper::{Html, Selector};
 
 use crate::models::{invoice::Invoice, item::Item};
 
@@ -79,16 +77,14 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
                 .next()
                 .map(|e| e.text().collect::<String>().trim().to_string())
                 .unwrap_or_default();
-            dbg!(catalog_id);
 
             let name: String = tr
                 .select(&name_selector)
                 .next()
                 .map(|e| e.text().collect::<String>().trim().to_string())
                 .unwrap_or_default();
-            dbg!(name);
 
-            let quantity: Result<u32, String> = tr
+            let quantity_ret: Result<u32, String> = tr
                 .select(&quantity_selector)
                 .next()
                 .ok_or("数量の取得に失敗".to_string())
@@ -99,9 +95,7 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
                         .map_err(|_| format!("数量の変換に失敗:{text}"));
                 });
 
-            dbg!(&quantity);
-
-            let total_price: Result<u32, String> = tr
+            let total_price_ret: Result<u32, String> = tr
                 .select(&total_price_selector)
                 .next()
                 .ok_or("合計金額が見つかりませんでした。".to_string())
@@ -117,9 +111,21 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
                         .parse::<u32>()
                         .map_err(|_| format!("合計金額の変換に失敗:{}", text));
                 });
-            dbg!(&total_price);
 
-            dbg!("////////////////");
+            let quantity: u32 = quantity_ret.unwrap();
+            let total_price: u32 = total_price_ret.unwrap();
+            let unit_of_price: u32 = total_price / quantity;
+
+            let item: Item = Item {
+                catalog_id: catalog_id,
+                name: name,
+                quantity: quantity,
+                unit_price: unit_of_price,
+            };
+
+            dbg!(&item);
+
+            result_list.push(item);
         }
     }
 

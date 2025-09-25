@@ -1,5 +1,6 @@
 ///
 /// 購入品
+#[derive(Debug)]
 pub struct Item {
     ///
     /// カタログID
