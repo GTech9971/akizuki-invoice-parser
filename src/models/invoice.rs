@@ -4,6 +4,7 @@ use crate::models::item::Item;
 
 ///
 /// 納品書
+#[derive(Debug)]
 pub struct Invoice {
     /// オーダーID
     ///

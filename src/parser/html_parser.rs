@@ -1,3 +1,4 @@
+use chrono::NaiveDate;
 use scraper::{Html, Selector};
 
 use crate::models::{invoice::Invoice, item::Item};
@@ -18,7 +19,7 @@ pub fn parse_invoice_order_id(html_content: &str) -> Option<String> {
 }
 
 ///
-/// html納品書から出荷日を取り出す
+/// html納品書から注文日を取り出す
 pub fn parse_order_date(html_content: &str) -> Option<String> {
     let document: Html = Html::parse_document(html_content);
 
@@ -130,4 +131,22 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
     }
 
     return result_list;
+}
+
+///
+/// htmlから納品書を解析する
+pub fn parse_invoice(html_content: &str) -> Invoice {
+    let order_date: String = parse_order_date(html_content).expect("注文日の取得に失敗");
+    let shipping_date: String = parse_shipping_date(html_content).expect("出荷日の取得に失敗");
+
+    let order_id: String = parse_invoice_order_id(html_content).expect("オーダーIDの取得に失敗");
+
+    let items: Vec<Item> = parse_items(html_content);
+
+    return Invoice {
+        order_id: order_id,
+        order_date: NaiveDate::parse_from_str(&order_date, "%Y年%m月%d日").expect(""),
+        shipping_date: NaiveDate::parse_from_str(&shipping_date, "%Y年%m月%d日").expect(""),
+        items: items,
+    };
 }

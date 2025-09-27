@@ -1,39 +1,78 @@
 use std::fs;
 
-use akizuki_invoice_parser::parser::html_parser;
+use akizuki_invoice_parser::{
+    models::{invoice::Invoice, item::Item},
+    parser::html_parser,
+};
 
 #[test]
 fn test_order_id() {
-    let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+    let html_content: String = fs::read_to_string("./assets/sample.html").unwrap();
 
-    let actual = html_parser::parse_invoice_order_id(&html_content);
+    let actual: Option<String> = html_parser::parse_invoice_order_id(&html_content);
 
     assert_eq!(actual.unwrap(), "EC250831-391903137-01");
 }
 
 #[test]
 fn test_order_date() {
-    let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+    let html_content: String = fs::read_to_string("./assets/sample.html").unwrap();
 
-    let actual = html_parser::parse_order_date(&html_content);
+    let actual: Option<String> = html_parser::parse_order_date(&html_content);
 
     assert_eq!(actual.unwrap(), "2025年08月31日");
 }
 
 #[test]
 fn test_shipping_date() {
-    let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+    let html_content: String = fs::read_to_string("./assets/sample.html").unwrap();
 
-    let actual = html_parser::parse_shipping_date(&html_content);
+    let actual: Option<String> = html_parser::parse_shipping_date(&html_content);
 
     assert_eq!(actual.unwrap(), "2025年09月01日");
 }
 
 #[test]
 fn test_items() {
-    let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+    let html_content: String = fs::read_to_string("./assets/sample.html").unwrap();
 
-    let actual = html_parser::parse_items(&html_content);
+    let actual: Vec<Item> = html_parser::parse_items(&html_content);
 
     assert_eq!(actual.len(), 8);
+
+    let expected = vec![
+        ("108617", "丸ピンICソケット ( 6P)", 10, 20),
+        (
+            "113582",
+            "積層セラミックコンデンサー 0.1μF50V X7R 2.54mm",
+            2,
+            100,
+        ),
+        ("101318", "5mm赤色LED 625nm 7cd60度", 1, 150),
+        ("106405", "5mm緑色LED 525nm OSG58A5111A", 1, 200),
+        ("110887", "PICマイコン PIC16F1455-I/P", 5, 300),
+        ("100006", "ICソケット (14P)", 1, 120),
+        ("109862", "L型ピンソケット 1×6(6P)", 10, 25),
+        ("100167", "ピンヘッダー 1×40 (40P)", 2, 35),
+    ];
+
+    for (i, (catalog_id, name, quantity, unit_price)) in expected.iter().enumerate() {
+        let item: &Item = &actual[i];
+        assert_eq!(item.catalog_id, catalog_id.to_string());
+        assert_eq!(item.name, name.to_string());
+        assert_eq!(item.quantity, *quantity);
+        assert_eq!(item.unit_price, *unit_price);
+    }
+}
+
+#[test]
+fn test_invoice() {
+    let html_content: String = fs::read_to_string("./assets/sample.html").unwrap();
+
+    let actual: Invoice = html_parser::parse_invoice(&html_content);
+
+    assert_eq!(actual.order_id, "EC250831-391903137-01",);
+    assert_eq!(actual.order_date.to_string(), "2025-08-31",);
+    assert_eq!(actual.shipping_date.to_string(), "2025-09-01");
+    assert_eq!(actual.items.len(), 8);
 }
