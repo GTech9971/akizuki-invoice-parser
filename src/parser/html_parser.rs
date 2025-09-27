@@ -5,6 +5,17 @@ use crate::models::{invoice::Invoice, item::Item};
 
 ///
 /// html納品書からオーダーIDを取り出す
+///
+/// # Example
+///
+/// ```
+/// use akizuki_invoice_parser::parser::html_parser;
+/// use std::fs;
+///
+/// let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+/// let order_id = html_parser::parse_invoice_order_id(&html_content);
+/// assert_eq!(order_id.unwrap(), "EC250831-391903137-01");
+/// ```
 pub fn parse_invoice_order_id(html_content: &str) -> Option<String> {
     let document: Html = Html::parse_document(html_content);
 
@@ -20,6 +31,17 @@ pub fn parse_invoice_order_id(html_content: &str) -> Option<String> {
 
 ///
 /// html納品書から注文日を取り出す
+///
+/// # Example
+///
+/// ```
+/// use akizuki_invoice_parser::parser::html_parser;
+/// use std::fs;
+///
+/// let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+/// let order_date = html_parser::parse_order_date(&html_content);
+/// assert_eq!(order_date.unwrap(), "2025年08月31日");
+/// ```
 pub fn parse_order_date(html_content: &str) -> Option<String> {
     let document: Html = Html::parse_document(html_content);
 
@@ -35,6 +57,17 @@ pub fn parse_order_date(html_content: &str) -> Option<String> {
 
 ///
 /// 納品書から出荷日を取得する
+///
+/// # Example
+///
+/// ```
+/// use akizuki_invoice_parser::parser::html_parser;
+/// use std::fs;
+///
+/// let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+/// let shipping_date = html_parser::parse_shipping_date(&html_content);
+/// assert_eq!(shipping_date.unwrap(), "2025年09月01日");
+/// ```
 pub fn parse_shipping_date(html_content: &str) -> Option<String> {
     let document: Html = Html::parse_document(html_content);
 
@@ -50,6 +83,18 @@ pub fn parse_shipping_date(html_content: &str) -> Option<String> {
 
 ///
 /// 購入品リストを返す
+///
+/// # Example
+///
+/// ```
+/// use akizuki_invoice_parser::parser::html_parser;
+/// use std::fs;
+///
+/// let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+/// let items = html_parser::parse_items(&html_content);
+/// assert_eq!(items.len(), 8);
+/// assert_eq!(items[0].catalog_id, "108617");
+/// ```
 pub fn parse_items(html_content: &str) -> Vec<Item> {
     let document: Html = Html::parse_document(html_content);
 
@@ -135,6 +180,22 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
 
 ///
 /// htmlから納品書を解析する
+///
+/// # Example
+///
+/// ```
+/// use akizuki_invoice_parser::parser::html_parser;
+/// use std::fs;
+///
+/// let html_content = fs::read_to_string("./assets/sample.html").unwrap();
+/// let invoice = html_parser::parse_invoice(&html_content);
+/// assert_eq!(invoice.order_id, "EC250831-391903137-01");
+/// assert_eq!(invoice.items.len(), 8);
+///
+/// // JSON変換も可能
+/// let json = invoice.to_json().unwrap();
+/// println!("{}", json);
+/// ```
 pub fn parse_invoice(html_content: &str) -> Invoice {
     let order_date: String = parse_order_date(html_content).expect("注文日の取得に失敗");
     let shipping_date: String = parse_shipping_date(html_content).expect("出荷日の取得に失敗");

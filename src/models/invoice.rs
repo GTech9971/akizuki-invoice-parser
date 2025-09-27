@@ -1,10 +1,11 @@
 use chrono::NaiveDate;
+use serde::Serialize;
 
 use crate::models::item::Item;
 
 ///
 /// 納品書
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Invoice {
     /// オーダーID
     ///
@@ -31,5 +32,17 @@ impl Invoice {
         return self.items.iter()
                         .map(|item| item.total_price())
                         .sum();
+    }
+
+    ///
+    /// JSONに変換
+    pub fn to_json(&self) -> Result<String, serde_json::Error> {
+        serde_json::to_string(self)
+    }
+
+    ///
+    /// 整形されたJSONに変換
+    pub fn to_json_pretty(&self) -> Result<String, serde_json::Error> {
+        serde_json::to_string_pretty(self)
     }
 }

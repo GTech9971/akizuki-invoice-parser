@@ -1,6 +1,8 @@
+use serde::Serialize;
+
 ///
 /// 購入品
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Item {
     ///
     /// カタログID
