@@ -202,7 +202,7 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
 /// use std::fs;
 ///
 /// let html_content = fs::read_to_string("./assets/sample.html").unwrap();
-/// let invoice = html_parser::parse_invoice(&html_content);
+/// let invoice = html_parser::parse_invoice(&html_content).ok().unwrap();
 /// assert_eq!(invoice.order_id, "EC250831-391903137-01");
 /// assert_eq!(invoice.items.len(), 8);
 ///
@@ -210,18 +210,18 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
 /// let json = invoice.to_json().unwrap();
 /// println!("{}", json);
 /// ```
-pub fn parse_invoice(html_content: &str) -> Invoice {
-    let order_date: String = parse_order_date(html_content).expect("注文日の取得に失敗");
-    let shipping_date: String = parse_shipping_date(html_content).expect("出荷日の取得に失敗");
+pub fn parse_invoice(html_content: &str) -> Result<Invoice, String> {
+    let order_date: String = parse_order_date(html_content).ok_or("注文日の取得に失敗")?;
+    let shipping_date: String = parse_shipping_date(html_content).ok_or("出荷日の取得に失敗")?;
 
-    let order_id: String = parse_invoice_order_id(html_content).expect("オーダーIDの取得に失敗");
+    let order_id: String = parse_invoice_order_id(html_content).ok_or("オーダーIDの取得に失敗")?;
 
     let items: Vec<Item> = parse_items(html_content);
 
-    return Invoice {
+    return Ok(Invoice {
         order_id: order_id,
         order_date: NaiveDate::parse_from_str(&order_date, "%Y年%m月%d日").expect(""),
         shipping_date: NaiveDate::parse_from_str(&shipping_date, "%Y年%m月%d日").expect(""),
         items: items,
-    };
+    });
 }

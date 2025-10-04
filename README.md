@@ -21,7 +21,7 @@ use std::fs;
 let html_content = fs::read_to_string("./assets/sample.html").unwrap();
 
 // 納品書を解析
-let invoice = html_parser::parse_invoice(&html_content);
+let invoice = html_parser::parse_invoice(&html_content).ok().unwrap();
 
 println!("オーダーID: {}", invoice.order_id);
 println!("注文日: {}", invoice.order_date);

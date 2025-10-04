@@ -45,7 +45,7 @@ fn test_total_price() {
 #[test]
 fn test_invoice_json() {
     let html_content: String = fs::read_to_string("./assets/sample.html").unwrap();
-    let invoice: Invoice = html_parser::parse_invoice(&html_content);
+    let invoice: Invoice = html_parser::parse_invoice(&html_content).ok().unwrap();
 
     let json_result = invoice.to_json();
     assert!(json_result.is_ok());

@@ -113,10 +113,18 @@ fn test_items() {
 fn test_invoice() {
     let html_content: String = fs::read_to_string("./assets/sample.html").unwrap();
 
-    let actual: Invoice = html_parser::parse_invoice(&html_content);
+    let actual: Invoice = html_parser::parse_invoice(&html_content).ok().unwrap();
 
     assert_eq!(actual.order_id, "EC250831-391903137-01",);
     assert_eq!(actual.order_date.to_string(), "2025-08-31",);
     assert_eq!(actual.shipping_date.to_string(), "2025-09-01");
     assert_eq!(actual.items.len(), 8);
+}
+
+#[test]
+fn test_fail() {
+    let actual: Result<Invoice, String> = html_parser::parse_invoice("invalid html");
+
+    assert_eq!(actual.is_err(), true);
+    assert_eq!(actual.err().unwrap(), "注文日の取得に失敗");
 }
