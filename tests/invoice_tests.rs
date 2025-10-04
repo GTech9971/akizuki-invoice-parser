@@ -11,6 +11,7 @@ fn test_total_price() {
     let item1 = Item {
         catalog_id: "123456".to_string(),
         name: "componentA".to_string(),
+        img_url: "".to_string(),
         quantity: 10,
         unit_price: 3,
     };
@@ -18,6 +19,7 @@ fn test_total_price() {
     let item2 = Item {
         catalog_id: "123456".to_string(),
         name: "componentA".to_string(),
+        img_url: "".to_string(),
         quantity: 10,
         unit_price: 3,
     };
@@ -25,6 +27,7 @@ fn test_total_price() {
     let item3 = Item {
         catalog_id: "123456".to_string(),
         name: "componentA".to_string(),
+        img_url: "".to_string(),
         quantity: 10,
         unit_price: 3,
     };

@@ -107,6 +107,8 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
     let name_selector: Selector =
         Selector::parse("div.block-purchase-history-detail--goods-name").unwrap();
 
+    let img_url_selector: Selector = Selector::parse("img").unwrap();
+
     let quantity_selector: Selector =
         Selector::parse("div.block-purchase-history-detail--goods-qty").unwrap();
 
@@ -128,6 +130,17 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
                 .select(&name_selector)
                 .next()
                 .map(|e| e.text().collect::<String>().trim().to_string())
+                .unwrap_or_default();
+
+            let img_url: String = tr
+                .select(&img_url_selector)
+                .next()
+                .map(|x| {
+                    x.attr("data-src")
+                        .expect("画像URLの取得に失敗")
+                        .trim()
+                        .to_string()
+                })
                 .unwrap_or_default();
 
             let quantity_ret: Result<u32, String> = tr
@@ -165,6 +178,7 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
             let item: Item = Item {
                 catalog_id: catalog_id,
                 name: name,
+                img_url: img_url,
                 quantity: quantity,
                 unit_price: unit_of_price,
             };

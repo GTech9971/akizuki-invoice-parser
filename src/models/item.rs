@@ -13,6 +13,12 @@ pub struct Item {
     pub name: String,
 
     ///
+    /// 画像URL(相対パス)
+    /// # Example
+    /// /img/goods/M/128818.jpg
+    pub img_url: String,
+
+    ///
     /// 個数
     pub quantity: u32,
 

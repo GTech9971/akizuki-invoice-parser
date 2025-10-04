@@ -94,6 +94,7 @@ pub struct Invoice {
 pub struct Item {
     pub catalog_id: String,
     pub name: String,
+    pub img_url: String,
     pub quantity: u32,
     pub unit_price: u32,
 }
@@ -110,12 +111,14 @@ pub struct Item {
     {
       "catalog_id": "108617",
       "name": "丸ピンICソケット ( 6P)",
+      "img_url": "/img/goods/M/108617.jpg",
       "quantity": 10,
       "unit_price": 20
     },
     {
       "catalog_id": "113582",
       "name": "積層セラミックコンデンサー 0.1μF50V X7R 2.54mm",
+      "img_url": "/img/goods/M/113582.jpg",
       "quantity": 2,
       "unit_price": 100
     }

@@ -41,25 +41,69 @@ fn test_items() {
     assert_eq!(actual.len(), 8);
 
     let expected = vec![
-        ("108617", "丸ピンICソケット ( 6P)", 10, 20),
+        (
+            "108617",
+            "丸ピンICソケット ( 6P)",
+            "/img/goods/M/108617.jpg",
+            10,
+            20,
+        ),
         (
             "113582",
             "積層セラミックコンデンサー 0.1μF50V X7R 2.54mm",
+            "/img/goods/M/128008.jpg",
             2,
             100,
         ),
-        ("101318", "5mm赤色LED 625nm 7cd60度", 1, 150),
-        ("106405", "5mm緑色LED 525nm OSG58A5111A", 1, 200),
-        ("110887", "PICマイコン PIC16F1455-I/P", 5, 300),
-        ("100006", "ICソケット (14P)", 1, 120),
-        ("109862", "L型ピンソケット 1×6(6P)", 10, 25),
-        ("100167", "ピンヘッダー 1×40 (40P)", 2, 35),
+        (
+            "101318",
+            "5mm赤色LED 625nm 7cd60度",
+            "/img/goods/M/101318.jpg",
+            1,
+            150,
+        ),
+        (
+            "106405",
+            "5mm緑色LED 525nm OSG58A5111A",
+            "/img/goods/M/127499.jpg",
+            1,
+            200,
+        ),
+        (
+            "110887",
+            "PICマイコン PIC16F1455-I/P",
+            "/img/goods/M/110887.jpg",
+            5,
+            300,
+        ),
+        (
+            "100006",
+            "ICソケット (14P)",
+            "/img/goods/M/128818.jpg",
+            1,
+            120,
+        ),
+        (
+            "109862",
+            "L型ピンソケット 1×6(6P)",
+            "/img/goods/M/109862.jpg",
+            10,
+            25,
+        ),
+        (
+            "100167",
+            "ピンヘッダー 1×40 (40P)",
+            "/img/goods/M/100167.jpg",
+            2,
+            35,
+        ),
     ];
 
-    for (i, (catalog_id, name, quantity, unit_price)) in expected.iter().enumerate() {
+    for (i, (catalog_id, name, img_url, quantity, unit_price)) in expected.iter().enumerate() {
         let item: &Item = &actual[i];
         assert_eq!(item.catalog_id, catalog_id.to_string());
         assert_eq!(item.name, name.to_string());
+        assert_eq!(item.img_url, img_url.to_string());
         assert_eq!(item.quantity, *quantity);
         assert_eq!(item.unit_price, *unit_price);
     }
