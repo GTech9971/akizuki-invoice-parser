@@ -117,7 +117,7 @@ fn test_invoice() {
 
     assert_eq!(actual.order_id, "EC250831-391903137-01",);
     assert_eq!(actual.order_date.to_string(), "2025-08-31",);
-    assert_eq!(actual.shipping_date.to_string(), "2025-09-01");
+    assert_eq!(actual.shipping_date.unwrap().to_string(), "2025-09-01");
     assert_eq!(actual.items.len(), 8);
 }
 

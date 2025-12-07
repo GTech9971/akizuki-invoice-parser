@@ -35,7 +35,7 @@ fn test_total_price() {
     let sut: Invoice = Invoice {
         order_id: "1234567890-rfgea".to_string(),
         order_date: Local::now().date_naive(),
-        shipping_date: Local::now().date_naive(),
+        shipping_date: Some(Local::now().date_naive()),
         items: vec![item1, item2, item3],
     };
 

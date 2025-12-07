@@ -73,10 +73,10 @@ pub fn parse_shipping_date(html_content: &str) -> Option<String> {
 
     let selector = Selector::parse("td.block-purchase-history-detail--ship-dt").unwrap();
 
-    let shipping_date_string: Option<String> = document
-        .select(&selector)
-        .next()
-        .map(|x| x.text().collect::<Vec<_>>().join("").trim().to_string());
+    let shipping_date_string: Option<String> = document.select(&selector).next().and_then(|x| {
+        let date = x.text().collect::<Vec<_>>().join("").trim().to_string();
+        if date.is_empty() { None } else { Some(date) }
+    });
 
     return shipping_date_string;
 }
@@ -212,16 +212,19 @@ pub fn parse_items(html_content: &str) -> Vec<Item> {
 /// ```
 pub fn parse_invoice(html_content: &str) -> Result<Invoice, String> {
     let order_date: String = parse_order_date(html_content).ok_or("注文日の取得に失敗")?;
-    let shipping_date: String = parse_shipping_date(html_content).ok_or("出荷日の取得に失敗")?;
+    let shipping_date: Option<String> = parse_shipping_date(html_content);
 
     let order_id: String = parse_invoice_order_id(html_content).ok_or("オーダーIDの取得に失敗")?;
 
     let items: Vec<Item> = parse_items(html_content);
 
+    let shipping_date: Option<NaiveDate> =
+        shipping_date.map(|x| NaiveDate::parse_from_str(&x, "%Y年%m月%d日").expect(""));
+
     return Ok(Invoice {
         order_id: order_id,
         order_date: NaiveDate::parse_from_str(&order_date, "%Y年%m月%d日").expect(""),
-        shipping_date: NaiveDate::parse_from_str(&shipping_date, "%Y年%m月%d日").expect(""),
+        shipping_date: shipping_date,
         items: items,
     });
 }

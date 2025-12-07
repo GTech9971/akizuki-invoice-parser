@@ -17,7 +17,7 @@ pub struct Invoice {
 
     ///
     /// 出荷日
-    pub shipping_date: NaiveDate,
+    pub shipping_date: Option<NaiveDate>,
 
     ///
     /// 購入品リスト

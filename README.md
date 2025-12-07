@@ -83,7 +83,7 @@ println!("購入品数: {}", items.len());
 pub struct Invoice {
     pub order_id: String,
     pub order_date: NaiveDate,
-    pub shipping_date: NaiveDate,
+    pub shipping_date: Optional<NaiveDate>,
     pub items: Vec<Item>,
 }
 ```
